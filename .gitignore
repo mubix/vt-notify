@@ -19,3 +19,6 @@ doc/
 
 # VirusTotal API Key File
 apikey.txt
+
+# Results log
+results.log
