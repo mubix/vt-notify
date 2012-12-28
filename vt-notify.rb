@@ -6,6 +6,28 @@ require 'net/http'
 require 'pry'
 require 'digest/sha1'
 require 'optparse'
+require 'net/smtp'
+
+def send_email(to,opts={})
+  opts[:from] = 'vt-notify@localhost'
+  opts[:from_alias] ='Virus Total Notifier'
+  opts[:subject] ="Virus Total Detection"
+  opts[:body]        ||= "If you see this there is something wrong with the script"
+
+  msg = <<END_OF_MESSAGE
+From: #{opts[:from_alias]} <#{opts[:from]}>
+To: <#{to}>
+Subject: #{opts[:subject]}
+
+#{opts[:body]}
+END_OF_MESSAGE
+
+  Net::SMTP.start($smtpserver) do |smtp|
+    smtp.send_message msg, opts[:from], to
+  end
+end
+
+
 
 def getsha1(filename)
 	begin
@@ -38,6 +60,9 @@ def parse_results(result)
 	else
 		$found << result['resource']
 		puts "#{result['resource']} was found #{result['positives']} out of #{result['total']} on #{result['scan_date']}"
+		if $emailaddr
+			send_email $emailaddr, :body => "#{result['resource']} was found #{result['positives']} out of #{result['total']} on #{result['scan_date']}"
+		end
 		File.open($logfilename, 'a') {|f| f.write("#{result['resource']},#{result['scan_date']},#{result['permalink']}\n") }
 	end
 end
@@ -48,6 +73,7 @@ argcheck = 0
 # Parse arguments
 OptionParser.new do |o|
 	o.on('-e EMAIL // email address of who to notify upon detection, will only log to file if not specified') { |emailaddr| $emailaddr = emailaddr }
+	o.on('-m SMTPSERVER // smtp server to relay email through') { |smtpserver| $smtpserver = smtpserver }
 	o.on('-s FILENAME // file name of binary to keep track of') { |binname| $binname = binname; argcheck = 1 }
 	o.on('-S SHA1 // single SHA1 to keep track of') { |sha1arg| $sha1arg = sha1arg; argcheck = 1 }
 	o.on('-f FILENAME // file containing sha1 hashes of files to keep track of') { |hashfilename| $hashfilename = hashfilename; argcheck = 1 }
