@@ -16,3 +16,6 @@ tmp
 .yardoc
 _yardoc
 doc/
+
+# VirusTotal API Key File
+apikey.txt
