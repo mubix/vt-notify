@@ -9,12 +9,12 @@ require 'optparse'
 require 'net/smtp'
 
 def send_email(to,opts={})
-  opts[:from] = 'vt-notify@localhost'
-  opts[:from_alias] ='Virus Total Notifier'
-  opts[:subject] ="Virus Total Detection"
-  opts[:body]        ||= "If you see this there is something wrong with the script"
+	opts[:from] = 'vt-notify@localhost'
+	opts[:from_alias] ='Virus Total Notifier'
+	opts[:subject] ="Virus Total Detection"
+	opts[:body]        ||= "If you see this there is something wrong with the script"
 
-  msg = <<END_OF_MESSAGE
+	msg = <<END_OF_MESSAGE
 From: #{opts[:from_alias]} <#{opts[:from]}>
 To: <#{to}>
 Subject: #{opts[:subject]}
@@ -22,9 +22,10 @@ Subject: #{opts[:subject]}
 #{opts[:body]}
 END_OF_MESSAGE
 
-  Net::SMTP.start($smtpserver) do |smtp|
-    smtp.send_message msg, opts[:from], to
-  end
+	$smtpserver ||= 'localhost'
+	Net::SMTP.start($smtpserver) do |smtp|
+		smtp.send_message msg, opts[:from], to
+	end
 end
 
 
@@ -200,7 +201,7 @@ loop {
 					parse_results(result)
 				end
 			elsif results.class == Hash
-				pase_results(results)
+				parse_results(results)
 			end
 		else
 			puts "No response from Virus Total, delaying for 10 seconds and trying again..."
