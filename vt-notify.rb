@@ -194,20 +194,3 @@ loop {
 	puts "check complete, sleeping for #{$interval} seconds"
 	sleep($interval)
 }
-
-=begin
-
-
-end
-puts "======================================"
-puts "          POSITIVES                   "
-puts "======================================"
-puts "Checked:     #{filelist.size}"
-puts "No response: #{noresponse.to_s}"
-puts "Not found:   #{notfound.to_s}"
-puts ""
-positives.each do |p|
-	puts p
-end
-
-=end
