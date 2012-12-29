@@ -38,14 +38,14 @@ And setting up vt-notify to just check on it, with the notifications going to th
 ```
 ./vt-notify.rb -s evil.exe -e justanotheruser@gmail.com -m gmail-smtp-in.l.google.com -i 20
 ```
-Upload to Virus Total and almost instantly:
+Then, acting as the incident responder, I upload the "found" malware to Virus Total and almost instantly:
 ```
 ======================================
             RESULTS                   
 ======================================
 Checked:     1
 Not found:   1
-Found:       296
+Found:       0
 
 check complete, sleeping for 20 seconds
 4f4c103911eff1668199ff7fbce5e87rae1hee0d was found 35 out of 46 on 2012-12-28 08:29:59
@@ -54,6 +54,6 @@ check complete, sleeping for 20 seconds
 ======================================
 Checked:     1
 Not found:   0
-Found:       297
+Found:       1
 ```
 Hash lists are also supported in hash-per-line files (-f) and single SHA1 (-S), however I don't have the ability to support multiple singles on the command line (-S) or (-s)
