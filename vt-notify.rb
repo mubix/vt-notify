@@ -62,7 +62,7 @@ def parse_results(result)
 		$found << result['resource']
 		puts "#{result['resource']} was found #{result['positives']} out of #{result['total']} on #{result['scan_date']}"
 		if $emailaddr
-			send_email $emailaddr, :body => "#{result['resource']} was found #{result['positives']} out of #{result['total']} on #{result['scan_date']}"
+			send_email $emailaddr, :body => "#{result['resource']} was found #{result['positives']} out of #{result['total']} on #{result['scan_date']}\n Permalink: #{result['permalink']}"
 		end
 		File.open($logfilename, 'a') {|f| f.write("#{result['resource']},#{result['scan_date']},#{result['permalink']}\n") }
 	end
