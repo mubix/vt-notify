@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
+# require 'rubygems' # uncomment this for use w/ ruby 1.8.7
 require 'json'
 require 'net/http'
-require 'pry'
 require 'digest/sha1'
 require 'optparse'
 require 'net/smtp'
