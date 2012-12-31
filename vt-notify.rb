@@ -32,7 +32,8 @@ end
 
 def getsha1(filename)
 	begin
-		sha1 = Digest::SHA1.hexdigest( File.read(filename) )
+		contents = open(filename, "rb") {|io| io.read }
+		sha1 = Digest::SHA1.hexdigest(contents)
 		return sha1
 	rescue
 		return
