@@ -96,11 +96,16 @@ $interval ||= 600 # 10 minutes in seconds
 $found = []
 $logfilename ||= 'results.log'
 $apikeyfile ||= 'apikey.txt'
+
+# See the following blog post, but since API limits are based on KEY+IP,
+# the VT peeps recommend using an application specific key distributed w/ the tool:
+# http://blog.virustotal.com/2012/12/public-api-request-rate-limits-and-tool.html
+
 begin
 	$apikey = File.open($apikeyfile) {|f| f.readline.strip}
 rescue Errno::ENOENT
-	puts 'API key file not found. Exiting'
-	exit
+	puts 'API key file not found. Using built-in: e09d42ac15ac172f50c1e340e551557d6c46d2673fc47b53ef5977b609d5ebe5'
+	$apikey = 'e09d42ac15ac172f50c1e340e551557d6c46d2673fc47b53ef5977b609d5ebe5'
 end
 
 puts "Using API key: #{$apikey}"
