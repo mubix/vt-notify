@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
+$PROGRAM_NAME = 'VirusTotalNotifier'
+
 # require 'rubygems' # uncomment this for use w/ ruby 1.8.7
 require 'json'
 require 'net/http'
