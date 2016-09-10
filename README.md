@@ -14,16 +14,16 @@ Usage
 
 ```
 Usage: vt-notify [options]
-    -e EMAIL // email address of who to notify upon detection, will only log to file if not specified
-    -m SMTPSERVER // smtp server to relay email through
-    -s FILENAME // file name of binary to keep track of
-    -S SHA1 // single SHA1 to keep track of
-    -f FILENAME // file containing sha1 hashes of files to keep track of
-    -d DIRECTORY // directory of binaries keep track of
-    -a APIKEYFILENAME // file contianing API key hash on first line, defaults to apikey.txt
-    -l LOGFILENAME // file to write/read positive entries to/from, defaults to results.log
-    -i INTERVAL // how often VT is checked, defaults to every 10 minutes
-    -h // this help screen
+	-e EMAIL // email address of who to notify upon detection
+	-m SMTPSERVER // smtp server to relay email through
+	-s FILENAME // binary file to track
+	-S SHA1 // single SHA1 hash to track
+	-f FILENAME // file contaning SHA1 hashes to track
+	-d DIRECTORY // directory of binary files to track
+	-a APIKEYFILENAME // file contianing API key hash on first line, defaults to apikey.txt
+	-l LOGFILENAME // file to write/read positive entries to/from, defaults to results.log
+	-i INTERVAL // how often VT is checked, defaults to every 10 minutes
+	-h // this useful help text
 ```
 
 For example, the following takes all 500+ files in the hackarmoury repository, SHA1 hashes them and checks them against Virus Total. The ones that have been submitted (even those that have a 0 detection rate) are reported via email to justanotheruser@gmail.com via the Gmail email servers. 
