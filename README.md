@@ -60,5 +60,5 @@ Found:       1
 Hash lists are also supported in hash-per-line files (-f) and single SHA1 (-S), however I don't have the ability to support multiple singles on the command line (-S) or (-s)
 
 ### Credits
-Credit to @mubix for the original vt-notify script
+Credit to @mubix for the original vt-notify script  
 Credit to @ashtinblanchard for bringing it forward
